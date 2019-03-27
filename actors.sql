@@ -98,4 +98,40 @@ GROUP BY film_id
 ORDER BY times_rented DESC;
 
 -- 7f 
+SELECT s.store_id, sum(amount) as Total FROM payment p 
+JOIN customer c ON p.customer_id = c.customer_id
+JOIN store s ON c.store_id = s.store_id
+GROUP BY s.store_id;
 
+-- 7g 
+SELECT store_id, s.address_id, c.city, co.country FROM store s 
+JOIN address a ON a.address_id = s.address_id
+JOIN city c ON c.city_id = a.city_id
+JOIN country co ON c.country_id = co.country_id;
+
+-- 7h
+SELECT c.name as Category, sum(p.amount) as Total FROM payment p 
+JOIN rental r ON p.rental_id = r.rental_id
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film f ON f.film_id = i.film_id
+JOIN film_category fc ON fc.film_id = f.film_id
+JOIN category c ON c.category_id = fc.category_id
+GROUP BY c.category_id
+ORDER BY Total DESC LIMIT 5;
+
+-- 8a 
+CREATE VIEW View1 AS 
+SELECT c.name as Category, sum(p.amount) as Total FROM payment p 
+JOIN rental r ON p.rental_id = r.rental_id
+JOIN inventory i ON r.inventory_id = i.inventory_id
+JOIN film f ON f.film_id = i.film_id
+JOIN film_category fc ON fc.film_id = f.film_id
+JOIN category c ON c.category_id = fc.category_id
+GROUP BY c.category_id
+ORDER BY Total DESC LIMIT 5;
+
+-- 8b
+SELECT * FROM View1;
+
+-- 8c 
+DROP VIEW View1;
