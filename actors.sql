@@ -88,7 +88,7 @@ WHERE p.payment_date LIKE '2005-08%'
 GROUP BY p.staff_id;
 
 -- 6c
-SELECT f.title, count(fa.actor_id) 
+SELECT f.title, count(fa.actor_id) num_actors
 FROM film as f 
 	INNER JOIN film_actor as fa ON f.film_id=fa.film_id 
 GROUP BY f.title;
@@ -145,11 +145,12 @@ GROUP BY f.film_id
 ORDER BY times_rented DESC;
 
 -- 7f 
-SELECT s.store_id, sum(amount) as Total 
-FROM payment p 
-	JOIN customer c ON p.customer_id = c.customer_id
-	JOIN store s ON c.store_id = s.store_id
-GROUP BY s.store_id;
+SELECT store.store_id, sum(payment.amount) as Total
+FROM store
+	JOIN inventory ON store.store_id = inventory.store_id
+    JOIN rental ON rental.inventory_id = inventory.inventory_id
+    JOIN payment ON payment.rental_id = rental.rental_id
+GROUP BY store.store_id;
 
 -- 7g 
 SELECT store_id, c.city, co.country 
